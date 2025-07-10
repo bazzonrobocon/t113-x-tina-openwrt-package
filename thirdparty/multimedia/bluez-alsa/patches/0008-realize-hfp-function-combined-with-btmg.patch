@@ -1,0 +1,42 @@
+From 2269227130518a3ccfd7d5ba75636b037023dbcf Mon Sep 17 00:00:00 2001
+From: luoyuyi <luoyuyi@allwinnertech.com>
+Date: Sat, 18 Nov 2023 13:25:46 +0800
+Subject: [PATCH] realize hfp function combined with btmg
+
+---
+ src/ba-rfcomm.c | 2 +-
+ src/sco.c       | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/ba-rfcomm.c b/src/ba-rfcomm.c
+index 082e047..9da2db1 100644
+--- a/src/ba-rfcomm.c
++++ b/src/ba-rfcomm.c
+@@ -1280,7 +1280,7 @@ read:
+ 			else
+ 				callback = rfcomm_get_callback(&reader.at);
+ 
+-			if (pfds[2].fd != -1 && !predefined_callback) {
++			if (pfds[2].fd != -1) {
+ 				at_build(tmp, sizeof(tmp), reader.at.type,
+ 						reader.at.command, reader.at.value);
+ 				if (write(pfds[2].fd, tmp, strlen(tmp)) == -1)
+diff --git a/src/sco.c b/src/sco.c
+index 8aaf998..4225a68 100644
+--- a/src/sco.c
++++ b/src/sco.c
+@@ -214,8 +214,11 @@ static void *sco_cvsd_enc_thread(struct ba_transport_thread *th) {
+ 	struct ba_transport_pcm *pcm = &t->sco.spk_pcm;
+ 	struct io_poll io = { .timeout = -1 };
+ 
++	debug("+++mtu_write: %d", t->mtu_write);
++	t->mtu_write = 120;
+ 	const size_t mtu_samples = t->mtu_write / sizeof(int16_t);
+ 	const size_t mtu_write = t->mtu_write;
++	debug("+++mtu_write: %d", t->mtu_write);
+ 
+ 	ffb_t buffer = { 0 };
+ 	pthread_cleanup_push(PTHREAD_CLEANUP(ffb_free), &buffer);
+-- 
+2.29.0
+

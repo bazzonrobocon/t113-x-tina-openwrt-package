@@ -1,0 +1,419 @@
+menu "Select cedarx configuration options"
+depends on PACKAGE_libcedarx
+
+comment "Only need to play audio/video ---"
+config ONLY_ENABLE_AUDIO
+	default n
+	bool "Only enable audio player"
+
+config ONLY_DISABLE_AUDIO
+	default n
+	bool "Only disable audio player while playing a video"
+
+comment "Middleware ---"
+config XPLAYER
+	select CEDAR_PARSER_ALL
+	select CEDAR_STREAM_ALL
+	default y
+	bool "Select xplayer middleware"
+
+config XRECORDER
+	depends on (!ONLY_ENABLE_AUDIO)
+	select CEDAR_VIDEO_ENCODER_ALL
+	select CEDAR_AENCODER_ALL
+	select CEDAR_MUXER_ALL
+	default y
+	bool "Select xrecorder middleware"
+
+comment "Muxers ---"
+
+config CEDAR_MUXER_ALL
+	depends on XRECORDER
+	bool "Select muxers"
+
+config CEDAR_MP3_MUXER
+	depends on XRECORDER
+	default y
+	bool "Support mp3 muxer"
+
+config CEDAR_AAC_MUXER
+	depends on XRECORDER
+	default y
+	bool "Support aac muxer"
+
+config CEDAR_TS_MUXER
+	depends on XRECORDER
+	default y
+	bool "Support ts muxer"
+
+config CEDAR_MP4_MUXER
+	depends on XRECORDER
+	default y
+	bool "Support mp4 muxer"
+
+comment "Audio Encoders ---"
+
+config CEDAR_AENCODER_ALL
+	depends on XRECORDER
+	bool "Select all audio encoders"
+
+comment "Audio Decoders ---"
+
+config CEDAR_ADECODER_AAC
+	default y
+	bool "AAC audio decoder"
+
+config CEDAR_ADECODER_ALAC
+	default y
+	bool "ALAC audio decoder"
+
+config CEDAR_ADECODER_AMR
+	default y
+	bool "AMR audio decoder"
+
+config CEDAR_ADECODER_APE
+	default y
+	bool "APE audio decoder"
+
+config CEDAR_ADECODER_ATRC
+	default y
+	bool "ATRC audio decoder"
+
+config CEDAR_ADECODER_FLAC
+	depends on XPLAYER
+	default y
+	bool "FLAC audio decoder"
+
+config CEDAR_ADECODER_MP3
+	default y
+	bool "MP3 audio decoder"
+
+config CEDAR_ADECODER_OGG
+	default y
+	bool "OGG audio decoder"
+
+config CEDAR_ADECODER_SIPR
+	default y
+	bool "SIPR audio decoder"
+
+config CEDAR_ADECODER_WAV
+	default y
+	bool "WAV audio decoder"
+
+config CEDAR_ADECODER_RA
+	default y
+	bool "RA audio decoder"
+
+config CEDAR_ADECODER_DSD
+	default y
+	bool "DSD audio decoder"
+
+config CEDAR_ADECODER_G729
+	default y
+	bool "G729 audio decoder"
+
+config CEDAR_ADECODER_OPUS
+	default y
+	bool "OPUS audio decoder"
+
+comment "Subtitle Decoders ---"
+
+config CEDAR_SUBTITLE_SUPPORT
+	depends on (!ONLY_ENABLE_AUDIO)
+	default y
+	bool "Select all subtitle decoders"
+
+comment "Parsers ---"
+config CEDAR_PARSER_ALL
+	depends on XPLAYER
+	bool "Select  parsers"
+
+config CEDAR_PARSER_AAC
+	depends on XPLAYER
+	default y
+	bool "Select aac parser"
+
+config CEDAR_PARSER_MP3
+	depends on XPLAYER
+	default y
+	bool "Select mp3 parser"
+
+config CEDAR_PARSER_WAV
+	depends on XPLAYER
+	depends on CEDAR_PARSER_MP3
+	default y
+	bool "Select wav parser"
+
+config CEDAR_PARSER_ID3V2
+	depends on XPLAYER
+	default y
+	bool "Select id3v2 parser"
+
+config CEDAR_PARSER_FLAC
+	depends on XPLAYER
+	default y
+	bool "Select flac parser"
+
+config CEDAR_PARSER_ATRAC
+	depends on XPLAYER
+	default y
+	bool "Select atrac parser"
+
+config CEDAR_PARSER_APE
+	depends on XPLAYER
+	default y
+	bool "Select ape parser"
+
+config CEDAR_PARSER_AMR
+	depends on XPLAYER
+	default y
+	bool "Select amr parser"
+
+config CEDAR_PARSER_OGG
+	depends on XPLAYER
+	default y
+	bool "Select ogg parser"
+
+config CEDAR_PARSER_G729
+	depends on XPLAYER
+	default y
+	bool "Select g729 parser"
+
+config CEDAR_PARSER_TS
+	depends on XPLAYER
+	default y
+	bool "Select ts parser"
+
+config CEDAR_PARSER_MKV
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO) 
+	default y
+	bool "Select mkv parser"
+
+config CEDAR_PARSER_MOV
+	depends on XPLAYER
+	default y
+	bool "Select mov parser"
+
+config CEDAR_PARSER_AVI
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO) 
+	default y
+	bool "Select avi parser"
+
+config CEDAR_PARSER_FLV
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO) 
+	default y
+	bool "Select flv parser"
+
+config CEDAR_PARSER_ASF
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO) 
+	default y
+	bool "Select asf parser"
+
+config CEDAR_PARSER_HLS
+	depends on XPLAYER
+	default y
+	bool "Select hls parser"
+
+config CEDAR_PARSER_MPG
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO)
+	default y
+	bool "Select mpg parser"
+
+config CEDAR_PARSER_PLS
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO)
+	default y
+	bool "Select pls parser"
+
+config CEDAR_PARSER_RAW_STREAM
+	depends on XPLAYER
+	default y
+	bool "Select raw stream parser"
+	help
+		parse h264/h265 raw stream.
+
+config CEDAR_PARSER_MMF
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO)
+	default y
+	bool "Select mmf parser"
+
+config CEDAR_PARSER_DSD
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO)
+	default y
+	bool "Select dsd parser"
+
+config CEDAR_PARSER_WV
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO)
+	default y
+	bool "Select wv parser"
+
+config CEDAR_PARSER_CAF
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO)
+	default y
+	bool "Select caf parser"
+
+config CEDAR_PARSER_MMS
+	depends on XPLAYER && (!ONLY_ENABLE_AUDIO)
+	default y
+	bool "Select mms parser"
+
+comment "Streams ---"
+
+config CEDAR_STREAM_ALL
+	depends on XPLAYER
+	bool "Select  streams"
+
+config CEDAR_FILE_STREAM
+	depends on XPLAYER
+	default y
+	bool "Support file stream"
+
+config CEDAR_HTTP_STREAM
+	depends on XPLAYER
+	default y
+	bool "Support http stream"
+
+config SSL_ENABLE
+	depends on XPLAYER
+	depends on CEDAR_HTTP_STREAM
+	default y
+	bool "Support https stream"
+
+config CEDAR_RTSP_STREAM
+	depends on XPLAYER
+	default n
+	bool "Support rtsp stream"
+
+config CEDAR_RTMP_STREAM
+	depends on XPLAYER
+	default n
+	bool "Support rtmp stream"
+
+comment "options for DEBUG ---"
+config VDEC_SAVE_YUV
+    default n
+    bool "Save YUV data after decoding when cedarx.conf enable options"
+
+comment "cedarx demo support---"
+
+config CEDAR_MUXER_DEMO
+    default n
+    bool "Support cedarx muxer demo"
+
+config CEDAR_PARSER_DEMO
+    default n
+    bool "Support cedarx parser demo"
+
+config CEDAR_VDEC_DEMO
+    default n
+    bool "Support cedarx vdec demo"
+
+config CEDAR_VENC_DEMO
+    default n
+    bool "Support cedarx venc demo"
+
+config CEDAR_XPLAYER_DEMO
+    default n
+    bool "Support cedarx xplayer demo"
+
+config CEDAR_XMETA_DEMO
+    default n
+    bool "Support cedarx xmeta demo"
+
+config CEDAR_JPEG_DEMO
+    default n
+    bool "Support cedarx jpeg demo"
+
+config CEDAR_RECODER_DEMO
+    default n
+    bool "Support cedarx recoder demo"
+
+config CEDAR_OMX_DEMO
+    default n
+    bool "Support cedarx omx demo"
+
+endmenu
+
+menu "Select Cedarx memory options"
+depends on PACKAGE_libcedarx
+config CUSTOM_VBV_ENABLE
+	depends on XPLAYER
+	default n
+	bool "Set VBV size by customer"
+
+config VBVBUFSIZE
+	depends on CUSTOM_VBV_ENABLE
+	default 1
+	int "Set VBV buffer size for xplayer in MB"
+
+config SCALE_DOWN_ENABLE
+	depends on XPLAYER
+	default n
+	bool "Set Custom scaledown enable"
+
+config SCALE_DOWN_WIDTH_LIMIT
+	depends on SCALE_DOWN_ENABLE
+	default 1920
+	int "Do scaledown when width is equal or beyond this value"
+
+config SCALE_DOWN_RATIO
+	depends on SCALE_DOWN_ENABLE
+	default 1
+	int "Scale down ratio which can be 1,2 or 3"
+
+config CUSTOM_FBM_NUM_ENABLE
+	depends on XPLAYER
+	default n
+	bool "Set FBM number by customer"
+
+config FBM_DISPLAY_HOLDING
+	depends on CUSTOM_FBM_NUM_ENABLE
+	default 3
+	int "FBM number which display holds"
+
+config FBM_DEINTERLEACED_USED
+	depends on CUSTOM_FBM_NUM_ENABLE
+	default 2
+	int "FBM number deinterleace use"
+
+config FBM_ROTATE_USED
+	depends on CUSTOM_FBM_NUM_ENABLE
+	default 0
+	int "FBM numer rotate used"
+
+config FBM_SMOOTHLY_USED
+	depends on CUSTOM_FBM_NUM_ENABLE
+	default 3
+	int "FBM number which used to play smoothly"
+
+config USE_ION_BUF_ENABLE
+	depends on XPLAYER
+	default n
+	bool "Set ion enable"
+
+config CUSTOM_CACHE_ENABLE
+	depends on XPLAYER
+	default n
+	bool "Set cache size by customer"
+
+config CACHE_BUFFER_SIZE
+	depends on CUSTOM_CACHE_ENABLE
+	default 20480
+	int "Set cache buffer size for xplayer in KB"
+
+config LIVE_CACHE_BUFFER_SIZE
+	depends on CUSTOM_CACHE_ENABLE
+	default 20480
+	int "Set live cache buffer size for xplayer in KB"
+
+config HTTP_STREAM_CACHE_SIZE
+	depends on CUSTOM_CACHE_ENABLE
+	default 5120
+	int "Set http cache size for xplayer in KB"
+
+config START_PLAY_CACHE_TIME
+	depends on CUSTOM_CACHE_ENABLE
+	default 5
+	int "Set start play cache time for xplayer in SECOND"
+
+endmenu
+

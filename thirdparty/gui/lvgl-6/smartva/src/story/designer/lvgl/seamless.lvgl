@@ -1,0 +1,11 @@
+{
+    "lvgl": {
+        "name": "seamless.lvgl",
+        "resolution": {
+            "height": 480,
+            "width": 800
+        },
+        "widgets": [
+        ]
+    }
+}

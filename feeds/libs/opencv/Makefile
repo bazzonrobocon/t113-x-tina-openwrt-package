@@ -1,0 +1,113 @@
+#
+# Copyright (C) 2006-2016 OpenWrt.org
+#
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
+#
+
+include $(TOPDIR)/rules.mk
+
+PKG_NAME:=opencv
+PKG_VERSION:=4.7.0
+PKG_RELEASE:=4
+
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/opencv/opencv/archive/refs/tags/4.7.0.tar.gz
+PKG_MD5SUM:=13e13244cb0cc6ec4f01eacd38d05d17
+
+PKG_EXTRA_NAME:=opencv_contrib
+PKG_EXTRA_SOURCE:=$(PKG_EXTRA_NAME)-$(PKG_VERSION).zip
+PKG_EXTRA_SOURCE_SUBDIR:=$(PKG_EXTRA_NAME)-$(PKG_VERSION)
+
+ADE_FRAMEWORK:=ade
+ADE_FRAMEWORK_VERSION:=0.1.2a
+ADE_FRAMEWORK_SOURCE:=$(ADE_FRAMEWORK)-$(ADE_FRAMEWORK_VERSION).zip
+ADE_FRAMEWORK_SOURCE_SUBDIR:=$(ADE_FRAMEWORK)-$(ADE_FRAMEWORK_VERSION)
+
+PKG_LICENSE:=Apache-2.0 license
+PKG_LICENSE_FILES:=COPYING
+
+PKG_BUILD_PARALLEL:=1
+CMAKE_BINARY_SUBDIR:=openwrt-build
+PKG_JOBS:=-j
+
+include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
+
+define Package/$(PKG_NAME)
+  SECTION:=libs
+  CATEGORY:=Libraries
+  TITLE:=Open Source Computer Vision Library
+  URL:=https://opencv.org/
+  ABI_VERSION:=2
+  DEPENDS:= +zlib +libjpeg-turbo +libpng +libstdcpp +OpenBLAS
+endef
+
+define Package/$(PKG_NAME)/description
+  OpenCV: Open Source Computer Vision Library
+endef
+
+CMAKE_OPTIONS += \
+	-DENABLE_SHARED=ON \
+	-DENABLE_STATIC=ON \
+	-DWITH_GTK=OFF \
+	-DWITH_TIFF=OFF \
+	-DWITH_QT=OFF \
+	-DWITH_GSTREAMER=OFF \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_CONFIGURATION_TYPES=Release \
+	-DBUILD_PERF_TESTS=OFF \
+	-DBUILD_TESTS=OFF \
+	-DOPENCV_PYTHON_SKIP_DETECTION=ON \
+	-DOPENCV_EXTRA_MODULES_PATH=$(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/$(PKG_EXTRA_SOURCE_SUBDIR)/modules
+
+define ade_unpack
+	mkdir -p $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/3rdparty/ade
+	unzip -d $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/3rdparty/ade $(DL_DIR)/$(ADE_FRAMEWORK_SOURCE);
+endef
+
+define opencv_contrib_unpack
+	mkdir -p $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)
+	unzip -d $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR) $(DL_DIR)/$(PKG_EXTRA_SOURCE);
+endef
+
+define copy_files
+	mkdir -p $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/downloads/wechat_qrcode
+	cp ./wechat_qrcode/* $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/downloads/wechat_qrcode
+	mkdir -p $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/downloads/xfeatures2d
+	cp ./xfeatures2d/* $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/downloads/xfeatures2d
+	mkdir -p $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/share/opencv4/testdata/cv/face/
+	cp ./face/* $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/share/opencv4/testdata/cv/face/
+	$(call PatchDir,$(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/$(PKG_EXTRA_SOURCE_SUBDIR),$(PATCH_DIR)/../opencv_contrib_patches,);
+endef
+
+Hooks/Prepare/Post += ade_unpack
+Hooks/Prepare/Post += opencv_contrib_unpack
+Hooks/Prepare/Post += copy_files
+
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/share
+	$(CP) $(PKG_INSTALL_DIR)/usr/share/* $(1)/usr/share
+
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include
+
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib
+
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin
+endef
+
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/usr/share
+	$(CP) $(PKG_INSTALL_DIR)/usr/share/* $(1)/usr/share
+
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib
+
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin
+endef
+
+$(eval $(call BuildPackage,$(PKG_NAME)))

@@ -1,0 +1,40 @@
+From 089620ddb7caa58f7acbc63725fd05f3624ffc57 Mon Sep 17 00:00:00 2001
+From: anruliu <anruliu@allwinnertech.com>
+Date: Wed, 4 Jan 2023 19:17:12 +0800
+Subject: [PATCH] fix compilation errors
+
+Signed-off-by: anruliu <anruliu@allwinnertech.com>
+---
+ ion.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/ion.c b/ion.c
+index cce583a..118c1a2 100644
+--- a/ion.c
++++ b/ion.c
+@@ -22,7 +22,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <linux/ion.h>
+-#include <stdatomic.h>
++//#include <stdatomic.h>
+ #include <stdio.h>
+ #include <string.h>
+ #include <sys/ioctl.h>
+@@ -33,7 +33,12 @@
+ #include <ion/ion.h>
+ #include <linux/ion_4.19.h>
+ 
+-#include <log/log.h>
++//#include <log/log.h>
++#include <atomic>
++using namespace std;
++
++//#include <log/log.h>
++#define ALOGE(format,...)  printf("\n[Log Error] [File:%s, Line:%d] " format "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+ 
+ #define ION_ABI_VERSION_MODULAR_HEAPS 2
+ 
+-- 
+2.29.0
+

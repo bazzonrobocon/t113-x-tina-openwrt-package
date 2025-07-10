@@ -1,0 +1,19 @@
+menu "Select cedare configuration options"
+depends on PACKAGE_libcedare
+
+
+comment "cedare demo support---"
+
+config CEDARE_AEENC_COMP_DEMO
+    default n
+    bool "Support cedare audio encoder demo"
+
+config CEDARE_RECORDER_DEMO
+    default n
+    bool "Support cedare recoder demo"
+
+config CEDARE_VENC_COMP_DEMO
+    default n
+    bool "Support cedare venc demo"
+
+endmenu

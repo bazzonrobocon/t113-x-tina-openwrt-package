@@ -1,0 +1,22 @@
+diff --git a/src/displayInterface.c b/src/displayInterface.c
+index 1ac128e..f1e85c4 100644
+--- a/src/displayInterface.c
++++ b/src/displayInterface.c
+@@ -871,7 +871,7 @@ int DispSetRotateDegree(int dispFb, unsigned int screenId,
+ 	ioctlParam[0] = (unsigned long) screenId;
+ 	ioctlParam[1] = (unsigned long) degree;
+ #ifdef __SUNXI_DISPLAY2__
+-	return ioctl(dispFb, DISP_ROTATION_SW_SET_ROT, ioctlParam);
++	return DISP_NOT_SUPPORT;
+ #else
+ 	return DISP_NOT_SUPPORT;
+ #endif
+@@ -887,7 +887,7 @@ int DispGetRotateDegree(int dispFb, unsigned int screenId)
+ 	unsigned long ioctlParam[4] = { 0 };
+ 	ioctlParam[0] = (unsigned long) screenId;
+ #ifdef __SUNXI_DISPLAY2__
+-	return ioctl(dispFb, DISP_ROTATION_SW_GET_ROT, ioctlParam);
++	return DISP_NOT_SUPPORT;
+ #else
+ 	return DISP_NOT_SUPPORT;
+ #endif

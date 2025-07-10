@@ -1,0 +1,81 @@
+menu "Select cedarc configuration options"
+depends on PACKAGE_libcedarc
+
+comment "Video Encoders ---"
+config CEDAR_VIDEO_ENCODER_COMMON_ALL
+	default y
+	bool "Enable all cedarc video encoders common"
+
+config CEDAR_VIDEO_ENCODER_ALL
+	bool "Enable all cedarc video encoders"
+
+comment "Video Decoders ---"
+
+config CEDAR_VIDEO_DECODER_COMMON_ALL
+	default y
+	bool "Enable all cedarc video decoder common"
+
+config CEDAR_VDECODER_H264
+	default y
+	bool "AVC(h.264) video decoder"
+
+config CEDAR_VDECODER_AVS
+	default n
+	bool "AVS video decoder"
+
+config CEDAR_VDECODER_H265
+	default y
+	bool "H265 video decoder"
+
+config CEDAR_VDECODER_MJPEG
+	default y
+	bool "MJPEG(motion jpeg) video decoder"
+
+config CEDAR_VDECODER_MPEG2
+	default y
+	bool "MPEG2 video decoder"
+
+config CEDAR_VDECODER_MPEG4BASE
+	default y
+	bool "MPEG4 base profile video decoder"
+
+config CEDAR_VDECODER_MPEG4DX
+	depends on CEDAR_VDECODER_MPEG4BASE
+	default y
+	bool "mpeg4 DIVX video decoder"
+
+config CEDAR_VDECODER_MPEG4H263
+	depends on CEDAR_VDECODER_MPEG4BASE
+	default y
+	bool "H263 video decoder"
+
+config CEDAR_VDECODER_MPEG4NORMAL
+	depends on CEDAR_VDECODER_MPEG4BASE
+	default y
+	bool "MPEG4 normal video decoder"
+
+config CEDAR_VDECODER_MPEG4VP6
+	depends on CEDAR_VDECODER_MPEG4BASE
+	default y
+	bool "mpeg4 VP6 video decoder"
+
+config CEDAR_VDECODER_VP6SOFT
+	default y
+	bool "VP6 video decoder"
+
+config CEDAR_VDECODER_VP8
+	default y
+	bool "VP8 video decoder"
+
+config CEDAR_VDECODER_VP9
+	default y
+	bool "VP9 video decoder"
+
+comment "OMX interface support ---"
+config OMX
+	select PACKAGE_libstdcpp
+	default y if CONFIG_PACKAGE_gst-omx=y
+	bool "Add for openmax support"
+
+endmenu
+

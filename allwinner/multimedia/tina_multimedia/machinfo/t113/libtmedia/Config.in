@@ -1,0 +1,52 @@
+menu "Select tmedia configuration options"
+depends on PACKAGE_libtmedia
+
+comment "Middleware ---"
+config TPLAYER
+	default y
+	bool "Select tplayer middleware"
+
+config TRECORDER
+	default y
+	bool "Select trecorder middleware"
+
+	source "trecorder/Config.in"
+
+config TMETADATARETRIVER
+	default y
+	bool "Select tmetadataretriver middleware"
+
+config JPEGDECODER
+	default y
+	bool "Select JPEGDECODER middleware"
+
+endmenu
+
+choice
+prompt "Choose whether to use VIN ISP"
+	depends on PACKAGE_libtmedia
+	default TR_NO_USE_VIN_ISP
+	help
+		Choose whether to compile VIN ISP.
+config TR_YES_USE_VIN_ISP
+	select PACKAGE_libAWIspApi
+	bool "YES"
+config TR_NO_USE_VIN_ISP
+	bool "NO"
+endchoice
+
+choice
+
+prompt "Choose whether to use playready"
+	depends on PACKAGE_libtmedia
+	default CEDARX_NO_USE_PLAYREADY
+	help
+		Choose whether to use playready.
+config CEDARX_YES_USE_PLAYREADY
+	select PACKAGE_playready
+	bool "YES"
+config CEDARX_NO_USE_PLAYREADY
+	bool "NO"
+endchoice
+
+
